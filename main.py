@@ -13,9 +13,14 @@ from models import Cmd
 utils.logMsg('Starting up...')
 init_complete = False
 
+""" temporary test command, move later TODO """
+async def test(cmd):
+    response = 'test'.format(cmd.message.author.id)
+    return await utils.send_message(cmd.message.channel, cmd.message.author, response, mention = cmd.message.author)
+
+
 cmd_map = {
-
-
+    "test": test
 }
 
 class MyClient(discord.Client):
@@ -50,7 +55,7 @@ class MyClient(discord.Client):
             
             """ we can perform period actions here if need be """
         
-        await asyncio.sleep(15)
+            await asyncio.sleep(15)
 
 
     async def on_message(self, message):
