@@ -1,6 +1,8 @@
 import discord
 import datetime
 
+TERMINATE = False
+
 """ read a file named fname and return its contents as a string """
 def getValueFromFileContents(fname):
 	token = ""
