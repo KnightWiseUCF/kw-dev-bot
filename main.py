@@ -7,20 +7,15 @@ import shlex
 
 import utils
 import cfg
+import commands
 
 from models import Cmd
 
 utils.logMsg('Starting up...')
 init_complete = False
 
-""" temporary test command, move later TODO """
-async def test(cmd):
-    response = 'test'.format(cmd.message.author.id)
-    return await utils.send_message(cmd.message.channel, cmd.message.author, response, mention = cmd.message.author)
-
-
 cmd_map = {
-    "test": test
+    cfg.cmd_prefix + "test": commands.test
 }
 
 class MyClient(discord.Client):
@@ -53,13 +48,13 @@ class MyClient(discord.Client):
 
                 utils.logMsg("Periodic hook still active.")
             
-            """ we can perform period actions here if need be """
-        
+            # we can perform period actions here if need be
+            
             await asyncio.sleep(15)
 
 
     async def on_message(self, message):
-
+        
         """ do not interact with our own messages """
         if message.author.id == client.user.id or message.author.bot == True:
             return
@@ -89,6 +84,7 @@ class MyClient(discord.Client):
             # if the message wasn't a command, we can stop here
             if not message.content.startswith(cfg.cmd_prefix):
                 return
+            
 
             # Check the main command map for the requested command.
             global cmd_map
@@ -105,6 +101,9 @@ token = utils.getToken()
 if token == None or len(token) == 0:
     utils.logMsg('Please place your API token in a file called "token", in the same directory as this script.')
     sys.exit(0)
+
+intents = discord.Intents.default()
+intents.message_content = True
 
 # connect to discord and run indefinitely
 try:
