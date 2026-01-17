@@ -1,4 +1,3 @@
-import random
 import discord
 import sys
 import asyncio
@@ -6,17 +5,21 @@ import time
 import shlex
 
 import utils
-import cfg
 import commands
 
 from models import Cmd
 
+# config
+cmd_prefix = "!"
+update_hookstillactive = 3600 # 3 hours between periodic logs
+
+# map command names to their methods
+cmd_map = {
+    cmd_prefix + "test": commands.test
+}
+
 utils.logMsg('Starting up...')
 init_complete = False
-
-cmd_map = {
-    cfg.cmd_prefix + "test": commands.test
-}
 
 class MyClient(discord.Client):
     
@@ -30,8 +33,6 @@ class MyClient(discord.Client):
 
         # log client
         utils.logMsg('Logged in as {} ({}).'.format(client.user.name, client.user.id))
-
-        """ Set up for infinite loop to perform periodic tasks. """
 
         time_now = int(time.time())
 
@@ -48,7 +49,7 @@ class MyClient(discord.Client):
 
                 utils.logMsg("Periodic hook still active.")
             
-            # we can perform period actions here if need be
+            # we can perform periodic actions here if need be
             
             await asyncio.sleep(15)
 
@@ -60,7 +61,7 @@ class MyClient(discord.Client):
             return
         
         """ read messages with command prefix """
-        if message.content.startswith(cfg.cmd_prefix):
+        if message.content.startswith(cmd_prefix):
             # tokenize the message. the command should be the first word.
             try:
                 tokens = shlex.split(message.content)  # it's split with shlex now because shlex regards text within quotes as a single token
@@ -81,11 +82,6 @@ class MyClient(discord.Client):
                 mentions=mentions
             )
 
-            # if the message wasn't a command, we can stop here
-            if not message.content.startswith(cfg.cmd_prefix):
-                return
-            
-
             # Check the main command map for the requested command.
             global cmd_map
             cmd_fn = cmd_map.get(command)
@@ -101,9 +97,6 @@ token = utils.getToken()
 if token == None or len(token) == 0:
     utils.logMsg('Please place your API token in a file called "token", in the same directory as this script.')
     sys.exit(0)
-
-intents = discord.Intents.default()
-intents.message_content = True
 
 # connect to discord and run indefinitely
 try:

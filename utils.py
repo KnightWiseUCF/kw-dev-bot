@@ -34,17 +34,14 @@ def logMsg(string):
     return string
 
 """ send a message on discord """
-async def send_message(channel, user_target = None, text = None, embed = None, delete_after = None, mention = None):
+async def send_message(channel, user_target = None, text = None, embed = None):
     try:
         if text is not None:
             
             if user_target is not None:
                 text = formatMessage(user_target, text)
-            
-            if mention is not None:
-                text += " <@{}>".format(mention.id)
-                  
-            return await channel.send(content=text, delete_after=delete_after)
+                              
+            return await channel.send(content=text)
         if embed is not None:
             return await channel.send(embed=embed)
     except discord.errors.Forbidden:
