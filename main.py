@@ -6,16 +6,13 @@ import shlex
 
 import utils
 import commands
+import cfg
 
 from models import Cmd
 
-# config
-cmd_prefix = "!"
-update_hookstillactive = 3600 # 3 hours between periodic logs
-
 # map command names to their methods
 cmd_map = {
-    cmd_prefix + "test": commands.test
+    cfg.cmd_prefix + "test": commands.test
 }
 
 utils.logMsg('Starting up...')
@@ -37,14 +34,14 @@ class MyClient(discord.Client):
         time_now = int(time.time())
 
         # Every three hours we log a message saying the periodic task hook is still active. On startup, we want this to happen within about 60 seconds, and then on the normal 3 hour interval.
-        time_last_logged = time_now - 3660
+        time_last_logged = time_now - cfg.update_hookstillactive + 60
 
         utils.logMsg('Beginning periodic hook loop.')
         while not utils.TERMINATE:
             time_now = int(time.time())
 
             # Periodic message to log that this stuff is still running.
-            if (time_now - time_last_logged) >= 3600:
+            if (time_now - time_last_logged) >= cfg.update_hookstillactive:
                 time_last_logged = time_now
 
                 utils.logMsg("Periodic hook still active.")
@@ -61,7 +58,7 @@ class MyClient(discord.Client):
             return
         
         """ read messages with command prefix """
-        if message.content.startswith(cmd_prefix):
+        if message.content.startswith(cfg.cmd_prefix):
             # tokenize the message. the command should be the first word.
             try:
                 tokens = shlex.split(message.content)  # it's split with shlex now because shlex regards text within quotes as a single token
