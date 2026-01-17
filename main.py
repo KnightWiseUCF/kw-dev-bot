@@ -14,8 +14,8 @@ from models import Cmd
 
 # map command names to their methods
 cmd_map = {
-    cfg.cmd_prefix + "test": commands.test,
-    cfg.cmd_prefix + cfg.cmd_count_questions: commands.count_questions
+    cfg.cmd_test: commands.test,
+    cfg.cmd_count_questions: commands.count_questions
 }
 
 utils.logMsg('Starting up...')
@@ -69,7 +69,7 @@ class MyClient(discord.Client):
                 tokens = message.content.split(' ')  # if splitting via shlex doesnt work (odd number of quotes), use the old splitting method so it doesnt give an exception
 
             tokens_count = len(tokens)
-            command = tokens[0].lower() if tokens_count >= 1 else ""
+            command = tokens[0].lower().replace("!", "") if tokens_count >= 1 else ""
 
             # remove mentions to us
             mentions = list(filter(lambda user: user.id != client.user.id, message.mentions))

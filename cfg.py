@@ -2,9 +2,10 @@
 cmd_prefix = "!"
 
 # command names
+cmd_test = "test"
 cmd_count_questions = "countquestions"
 
-# cmd description map
+# cmd usage map
 usages = {
     cmd_count_questions: "`{}{} [TOPIC NAME]`".format(cmd_prefix, cmd_count_questions)
     }
