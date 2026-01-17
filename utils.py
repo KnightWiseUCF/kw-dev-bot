@@ -1,31 +1,28 @@
 import discord
 import datetime
+import os
+
+from dotenv import load_dotenv, dotenv_values 
 
 TERMINATE = False
 
-""" read a file named fname and return its contents as a string """
-def getValueFromFileContents(fname):
+""" return varname from .env file """
+def getEnvVar(varname):
+	
 	token = ""
 
 	try:
-		f_token = open(fname, "r")
-		f_token_lines = f_token.readlines()
-
-		for line in f_token_lines:
-			line = line.rstrip()
-			if len(line) > 0:
-				token = line
+		load_dotenv()
+		token = os.getenv(varname)
 	except IOError:
 		token = ""
-		print("Could not read {} file.".format(fname))
-	finally:
-		f_token.close()
+		print("Could not read {} from .env file.".format(varname))
 
 	return token
 
 """ get the Discord API token from the config file on disk """
 def getToken():
-	return getValueFromFileContents("token")
+	return getEnvVar("BOT_TOKEN")
 
 """ internal console log messages """
 def logMsg(string):

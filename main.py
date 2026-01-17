@@ -4,6 +4,8 @@ import asyncio
 import time
 import shlex
 
+from dotenv import load_dotenv, dotenv_values
+
 import utils
 import commands
 import cfg
@@ -12,7 +14,8 @@ from models import Cmd
 
 # map command names to their methods
 cmd_map = {
-    cfg.cmd_prefix + "test": commands.test
+    cfg.cmd_prefix + "test": commands.test,
+    cfg.cmd_prefix + cfg.cmd_count_questions: commands.count_questions
 }
 
 utils.logMsg('Starting up...')
@@ -92,7 +95,7 @@ class MyClient(discord.Client):
 token = utils.getToken()
 
 if token == None or len(token) == 0:
-    utils.logMsg('Please place your API token in a file called "token", in the same directory as this script.')
+    utils.logMsg('INSERT ERROR HERE')
     sys.exit(0)
 
 # connect to discord and run indefinitely

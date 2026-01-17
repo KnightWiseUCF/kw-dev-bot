@@ -1,5 +1,14 @@
 # config
 cmd_prefix = "!"
+
+# command names
+cmd_count_questions = "countquestions"
+
+# cmd description map
+usages = {
+    cmd_count_questions: "`{}{} [TOPIC NAME]`".format(cmd_prefix, cmd_count_questions)
+    }
+
 update_hookstillactive = 3600 # 3 hours between periodic logs
 
 topics = [
