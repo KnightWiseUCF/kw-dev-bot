@@ -34,13 +34,10 @@ def logMsg(string):
     return string
 
 """ send a message on discord """
-async def send_message(channel, user_target = None, text = None, embed = None):
+async def send_message(channel, text = None, embed = None):
     try:
         if text is not None:
-            
-            if user_target is not None:
-                text = formatMessage(user_target, text)
-                              
+                                          
             return await channel.send(content=text)
         if embed is not None:
             return await channel.send(embed=embed)
@@ -49,9 +46,6 @@ async def send_message(channel, user_target = None, text = None, embed = None):
         raise
     except:
         logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))
-
-def formatMessage(user_target, message):
-    return "*{}*: {}".format(user_target.display_name, message).replace("@", "\\{at\\}")
 
 """ Find a chat channel by name in a server. might not need this """
 def get_channel(server = None, channel_name = ""):
