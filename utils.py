@@ -20,9 +20,17 @@ def getEnvVar(varname):
 
 	return token
 
-""" get the Discord API token from the config file on disk """
+""" get the Discord API token from .env """
 def getToken():
 	return getEnvVar("BOT_TOKEN")
+
+""" get jwt secret from .env """
+def getJwtSecret():
+	return getEnvVar("JWT_SECRET")
+
+""" get api route url from .env """
+def getRoute():
+	return getEnvVar("API_ROUTE")
 
 """ internal console log messages """
 def logMsg(string):

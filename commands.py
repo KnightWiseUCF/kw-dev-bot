@@ -4,7 +4,7 @@ import requests
 import cfg
 import utils
 
-route = "https://knightwise.dev/api/"
+route = utils.getRoute()
 
 """ temporary test command """
 async def test(cmd):
@@ -31,7 +31,7 @@ async def count_questions(cmd):
                     response = "Error: Status Code {}".format(r.status_code)
                 else:
                     result = r.json()
-                    utils.logMsg(str(r.elapsed))
+                    # utils.logMsg(str(r.elapsed))
                     response = "{} questions found for topic '{}'".format(len(result), t)
                 break
         
