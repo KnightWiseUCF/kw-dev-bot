@@ -11,13 +11,23 @@ async def test(cmd):
     response = 'test'
     return await utils.send_message(cmd.message.channel, response)
 
+
+""" print out a list of commands """
+async def help(cmd):
+    response = 'Command List:```'
+    for c in cfg.cmd_descriptions.keys():
+        response += "\n{}{}: {}\n\tUsage: {}".format(cfg.cmd_prefix, c, cfg.cmd_descriptions[c], cfg.cmd_usages[c])
+    response += "```"
+    return await utils.send_message(cmd.message.channel, response)
+
+
 """ count questions from topic name """
 async def count_questions(cmd):
 
     response = ''
 
     if cmd.tokens_count < 2:
-        response = "Usage: {}".format(cfg.usages[cfg.cmd_count_questions])
+        response = "Usage: `{}`".format(cfg.cmd_usages[cfg.cmd_count_questions])
     
     else:
         # go thru list of topic

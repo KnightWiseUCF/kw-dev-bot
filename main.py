@@ -7,15 +7,16 @@ import shlex
 from dotenv import load_dotenv, dotenv_values
 
 import utils
-import commands
 import cfg
+import commands.general
 
 from models import Cmd
 
 # map command names to their methods
 cmd_map = {
-    cfg.cmd_test: commands.test,
-    cfg.cmd_count_questions: commands.count_questions
+    cfg.cmd_test: commands.general.test,
+    cfg.cmd_help: commands.general.help,
+    cfg.cmd_count_questions: commands.general.count_questions
 }
 
 utils.logMsg('Starting up...')

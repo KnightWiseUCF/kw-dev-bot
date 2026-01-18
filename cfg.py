@@ -3,11 +3,19 @@ cmd_prefix = "!"
 
 # command names
 cmd_test = "test"
+cmd_help = "help"
 cmd_count_questions = "countquestions"
 
 # cmd usage map
-usages = {
-    cmd_count_questions: "`{}{} [TOPIC NAME]`".format(cmd_prefix, cmd_count_questions)
+cmd_usages = {
+    cmd_help: "{}{}".format(cmd_prefix, cmd_help),
+    cmd_count_questions: "{}{} [TOPIC NAME]".format(cmd_prefix, cmd_count_questions)
+    }
+
+# cmd description map
+cmd_descriptions = {
+    cmd_help: "Returns a list of commands.",
+    cmd_count_questions: "Returns the number of questions categorized as a given topic."
     }
 
 update_hookstillactive = 3600 # 3 hours between periodic logs
