@@ -9,6 +9,7 @@ from dotenv import load_dotenv, dotenv_values
 import utils
 import cfg
 import commands.general
+import commands.users
 
 from models import Cmd
 
@@ -16,7 +17,8 @@ from models import Cmd
 cmd_map = {
     cfg.cmd_test: commands.general.test,
     cfg.cmd_help: commands.general.help,
-    cfg.cmd_count_questions: commands.general.count_questions
+    cfg.cmd_count_questions: commands.general.count_questions,
+    cfg.cmd_delete_user: commands.users.delete_user
 }
 
 utils.logMsg('Starting up...')
