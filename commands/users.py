@@ -4,7 +4,7 @@ import cfg
 import utils
 
 route = utils.getRoute()
-secret = utils.getJwtSecret()
+admin = utils.getAdminKey()
 
 """ delete a user account (TODO delete using the username) """
 async def delete_user(cmd):
@@ -17,7 +17,7 @@ async def delete_user(cmd):
         target = cmd.tokens[1]
 
         headers = {
-            'Authorization': 'Bearer {}'.format(secret),
+            'Authorization': 'Bearer {}'.format(admin),
         }
 
         r = requests.delete("{}users/{}".format(route, target), headers=headers)

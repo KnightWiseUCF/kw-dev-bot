@@ -24,9 +24,9 @@ def getEnvVar(varname):
 def getToken():
 	return getEnvVar("BOT_TOKEN")
 
-""" get jwt secret from .env """
-def getJwtSecret():
-	return getEnvVar("JWT_SECRET")
+""" get admin key from .env """
+def getAdminKey():
+	return getEnvVar("ADMIN_KEY")
 
 """ get api route url from .env """
 def getRoute():
