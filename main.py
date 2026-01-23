@@ -18,7 +18,8 @@ cmd_map = {
     cfg.cmd_test: commands.general.test,
     cfg.cmd_help: commands.general.help,
     cfg.cmd_count_questions: commands.general.count_questions,
-    cfg.cmd_delete_user: commands.users.delete_user
+    cfg.cmd_delete_user: commands.users.delete_user,
+    cfg.cmd_create_user: commands.users.create_user,
 }
 
 utils.logMsg('Starting up...')
