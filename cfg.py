@@ -21,7 +21,7 @@ cmd_descriptions = {
     cmd_help: "Returns a list of commands.",
     cmd_count_questions: "Returns the number of questions categorized as a given topic.",
     cmd_delete_user: "Deletes a user given an ID.",
-    cmd_create_user: "Creates a user with the specified parameters. Email doesn't need to be real.",
+    cmd_create_user: "Creates a user with the specified parameters. Email doesn't need to be real, just unique.",
     }
 
 update_hookstillactive = 3600 # 3 hours between periodic logs
