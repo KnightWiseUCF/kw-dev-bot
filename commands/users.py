@@ -39,22 +39,20 @@ async def create_user(cmd):
     tokens = cmd.tokens
     count = cmd.tokens_count
     
-    if count < 2:
+    if count < 3:
         response = "Usage: `{}`".format(cfg.cmd_usages[cfg.cmd_create_user])
     
     else:
         user = {
             "username": tokens[1],
-            "email": "dummy@knightwise.dev",
+            "email": tokens[2],
             "password": "password",
             "firstName": "First",
             "lastName": "Last",
             }
 
-        if count >= 3:
-            user["password"] = tokens[2]
         if count >= 4:
-            user["email"] = tokens[3]
+            user["password"] = tokens[3]
         if count >= 5:
             user["firstName"] = tokens[4]
         if count >= 6:
@@ -69,8 +67,10 @@ async def create_user(cmd):
 
         if r.status_code > 201:
             response = "Error: Status Code {} ({})".format(r.status_code, r.reason)
+            if r.status_code == 400:
+                response += "\nUsername or email might already exist."
         
         else:
-            response = "User created! ID: {}".format(r.text)
+            response = "User created! ID: {}".format(r.json()["userId"])
 
     return await utils.send_message(cmd.message.channel, response)
