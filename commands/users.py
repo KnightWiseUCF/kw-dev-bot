@@ -10,7 +10,6 @@ admin = utils.getAdminKey()
 """ delete a user account (TODO delete using the username) """
 async def delete_user(cmd):
     response = ''
-    print(admin)
 
     if cmd.tokens_count < 2:
         response = "Usage: `{}`".format(cfg.cmd_usages[cfg.cmd_delete_user])
