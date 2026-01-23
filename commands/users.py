@@ -67,7 +67,7 @@ async def create_user(cmd):
 
         r = requests.post("{}admin/createuser".format(route), headers=headers, json=user)
 
-        if r.status_code >= 201:
+        if r.status_code > 201:
             response = "Error: Status Code {} ({})".format(r.status_code, r.reason)
         
         else:
