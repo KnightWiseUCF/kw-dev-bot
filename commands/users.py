@@ -6,9 +6,11 @@ import utils
 route = utils.getRoute()
 admin = utils.getAdminKey()
 
+
 """ delete a user account (TODO delete using the username) """
 async def delete_user(cmd):
     response = ''
+    print(admin)
 
     if cmd.tokens_count < 2:
         response = "Usage: `{}`".format(cfg.cmd_usages[cfg.cmd_delete_user])
@@ -20,7 +22,7 @@ async def delete_user(cmd):
             'Authorization': 'Bearer {}'.format(admin),
         }
 
-        r = requests.delete("{}users/{}".format(route, target), headers=headers)
+        r = requests.delete("{}admin/users/{}".format(route, target), headers=headers)
 
         utils.logMsg(r.elapsed)
 
