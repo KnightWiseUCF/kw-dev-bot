@@ -10,6 +10,7 @@ import utils
 import cfg
 import commands.general
 import commands.users
+import commands.questions
 
 from models import Cmd
 
@@ -20,6 +21,7 @@ cmd_map = {
     cfg.cmd_count_questions: commands.general.count_questions,
     cfg.cmd_delete_user: commands.users.delete_user,
     cfg.cmd_create_user: commands.users.create_user,
+    cfg.cmd_preview_question: commands.questions.preview_question,
 }
 
 utils.logMsg('Starting up...')

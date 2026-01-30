@@ -42,10 +42,10 @@ def logMsg(string):
 async def send_message(channel, text = None, embed = None):
     try:
         if text is not None:
-                                          
+            if embed is not None:
+                return await channel.send(content = text, file=embed)
             return await channel.send(content=text)
-        if embed is not None:
-            return await channel.send(embed=embed)
+        
     except discord.errors.Forbidden:
         logMsg('Could not message user: {}\n{}'.format(channel, text))
         raise
