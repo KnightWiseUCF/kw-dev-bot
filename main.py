@@ -80,12 +80,15 @@ class MyClient(discord.Client):
             # remove mentions to us
             mentions = list(filter(lambda user: user.id != client.user.id, message.mentions))
 
+            attachments = message.attachments
+
             # Create command object
             cmd_obj = Cmd(
                 tokens=tokens,
                 message=message,
                 client=client,
-                mentions=mentions
+                mentions=mentions,
+                attachments=attachments
             )
 
             # Check the main command map for the requested command.
