@@ -15,6 +15,7 @@ admin = utils.getAdminKey()
 
 question_add_temp_queue = []
 
+""" helper for html previews """
 def html_from_str(html_str):
     hti = Html2Image(size=(1000,1000), temp_path="C:/Users/Minerva/Desktop/Storage/Coding/!!SENIOR DESIGN/kw-dev-bot")
     time_now = time.time()
@@ -26,6 +27,7 @@ def html_from_str(html_str):
         image = File(f)
     return image
 
+""" takes input html and renders it to an image """
 async def preview_question(cmd):
     response = ''
     image = None
@@ -41,6 +43,44 @@ async def preview_question(cmd):
     
     await utils.send_message(cmd.message.channel, response, embed=image)
 
+""" get a question from an input id and return info about it. """
+async def get_question(cmd):
+    response = ''
+    image = None
+
+    if cmd.tokens_count < 2:
+        response = "Usage: `{}`".format(cfg.cmd_usages[cfg.cmd_get_question])
+
+    else:
+        headers = utils.get_headers(admin)
+        r = requests.get("{}admin/problems/{}".format(route, cmd.tokens[1]), headers=headers)
+        if r.status_code > 201:
+            response = "Error: Status Code {} ({})".format(r.status_code, r.reason)
+        
+        else:
+            info = r.json()
+            answers = info["answers"]
+
+            response += "Type: {} - Points: {} - Author: {} - OwnerID: {}\nSection {} - Category: {} - Subcategory: {}\n".format(
+                info['TYPE'],
+                info['POINTS_POSSIBLE'],
+                info['AUTHOR_EXAM_ID'],
+                info['OWNER_ID'],
+                info['SECTION'],
+                info['CATEGORY'],
+                info['SUBCATEGORY'],
+                )
+            try:
+                image = html_from_str(info['QUESTION_TEXT'])
+            except:
+                response += "Question Text:\n{}".format(info['QUESTION_TEXT'])
+
+            for a in answers:
+                response += "Answer (Correctness {} Priority {}): `{}`\n".format(a['IS_CORRECT_ANSWER'], a['PRIORITY'], a['TEXT'])
+
+    await utils.send_message(cmd.message.channel, response, embed=image)
+
+""" read a user's file upload and add it to the database as a set of questions """
 async def create_question(cmd):
     response = ''
     image = None
@@ -81,7 +121,7 @@ async def create_question(cmd):
                 ids = []
                 if q_count > 0:
                     for q in question_add_temp_queue:
-                        headers = utils.get_header(admin)
+                        headers = utils.get_headers(admin)
                         
                         r = requests.post("{}admin/createquestion".format(route), headers=headers, json=q)
 

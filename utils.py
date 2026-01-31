@@ -65,7 +65,7 @@ def get_channel(server = None, channel_name = ""):
 
 	return channel
 
-def get_header(key):
+def get_headers(key):
 	return {
 			'Authorization': 'Bearer {}'.format(key),
 			'Content-Type': 'application/json'

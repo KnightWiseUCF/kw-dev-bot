@@ -23,6 +23,7 @@ cmd_map = {
     cfg.cmd_create_user: commands.users.create_user,
     cfg.cmd_preview_question: commands.questions.preview_question,
     cfg.cmd_create_question: commands.questions.create_question,
+    cfg.cmd_get_question: commands.questions.get_question,
 }
 
 utils.logMsg('Starting up...')
