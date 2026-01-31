@@ -64,3 +64,9 @@ def get_channel(server = None, channel_name = ""):
 		logMsg('Error: In get_channel(), could not find channel using channel_name "{}"'.format(channel_name))
 
 	return channel
+
+def get_header(key):
+	return {
+			'Authorization': 'Bearer {}'.format(key),
+			'Content-Type': 'application/json'
+		}

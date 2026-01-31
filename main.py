@@ -22,6 +22,7 @@ cmd_map = {
     cfg.cmd_delete_user: commands.users.delete_user,
     cfg.cmd_create_user: commands.users.create_user,
     cfg.cmd_preview_question: commands.questions.preview_question,
+    cfg.cmd_create_question: commands.questions.create_question,
 }
 
 utils.logMsg('Starting up...')
