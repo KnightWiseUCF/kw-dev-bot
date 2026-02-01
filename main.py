@@ -11,6 +11,7 @@ import cfg
 import commands.general
 import commands.users
 import commands.questions
+import commands.professors
 
 from models import Cmd
 
@@ -25,6 +26,7 @@ cmd_map = {
     cfg.cmd_create_question: commands.questions.create_question,
     cfg.cmd_get_question: commands.questions.get_question,
     cfg.cmd_get_user: commands.users.get_user,
+    cfg.cmd_unverified_list: commands.professors.get_unverified_professors,
 }
 
 utils.logMsg('Starting up...')

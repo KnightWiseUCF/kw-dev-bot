@@ -11,6 +11,7 @@ cmd_preview_question = "previewquestion"
 cmd_create_question = "addquestion"
 cmd_get_question = "getquestion"
 cmd_get_user = "getuser"
+cmd_unverified_list = "unverified"
 
 # cmd usage map
 cmd_usages = {
@@ -22,6 +23,7 @@ cmd_usages = {
     cmd_create_question: "{}{} [optional: -info-separator str] [optional: -question-separator str] # REQUIRES FILE UPLOAD IN MESSAGE".format(cmd_prefix, cmd_create_question),
     cmd_get_question: "{}{} [Question ID]".format(cmd_prefix, cmd_get_question),
     cmd_get_user: "{}{} ['id' or 'username'] [ID/USERNAME]".format(cmd_prefix, cmd_get_user),
+    cmd_unverified_list: "{}{}".format(cmd_prefix, cmd_unverified_list),
     }
 
 # cmd description map
@@ -34,6 +36,7 @@ cmd_descriptions = {
     cmd_create_question: "Adds question(s) to the database from a text file upload. Use !createquestion help to view the proper formatting.",
     cmd_get_question: "Returns info about a question from an input ID.",
     cmd_get_user: "Returns info about a user from either the ID or the username.",
+    cmd_unverified_list: "Returns a list of unverified professor accounts and relevant info.",
     }
 
 update_hookstillactive = 3600 # 3 hours between periodic logs
@@ -64,4 +67,4 @@ temp_img = "temp.png"
 
 question_input_template = "Type of question\n$\nAuthor\n$\nSection\n$\nCategory\n$\nSubcategory\n$\nfloat for Points\n$\nQuestionText\n$\nint for OwnerID\n$\n['list', 'of', 'answer', 'texts']\n$\nList of smallints for answer correctness\n$\nList of ints for answer priority"
 
-expire_time = 30
+expire_time = 60 * 5
