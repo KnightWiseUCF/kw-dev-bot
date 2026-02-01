@@ -12,6 +12,7 @@ cmd_create_question = "addquestion"
 cmd_get_question = "getquestion"
 cmd_get_user = "getuser"
 cmd_unverified_list = "unverified"
+cmd_delete_question = "deletequestion"
 
 # cmd usage map
 cmd_usages = {
@@ -24,6 +25,7 @@ cmd_usages = {
     cmd_get_question: "{}{} [Question ID]".format(cmd_prefix, cmd_get_question),
     cmd_get_user: "{}{} ['id' or 'username'] [ID/USERNAME]".format(cmd_prefix, cmd_get_user),
     cmd_unverified_list: "{}{}".format(cmd_prefix, cmd_unverified_list),
+    cmd_delete_question: "{}{} [QUESTION ID]".format(cmd_prefix, cmd_delete_question),
     }
 
 # cmd description map
@@ -37,6 +39,7 @@ cmd_descriptions = {
     cmd_get_question: "Returns info about a question from an input ID.",
     cmd_get_user: "Returns info about a user from either the ID or the username.",
     cmd_unverified_list: "Returns a list of unverified professor accounts and relevant info.",
+    cmd_delete_question: "Deletes a question, answer_text, and responses from the database."
     }
 
 update_hookstillactive = 3600 # 3 hours between periodic logs

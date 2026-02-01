@@ -2,6 +2,7 @@ import os
 import time
 import requests
 import asyncio
+import imgkit
 
 from html2image import Html2Image
 from discord import File
@@ -14,18 +15,27 @@ route = utils.getRoute()
 admin = utils.getAdminKey()
 
 question_add_temp_queue = []
+deletion_target = None
 
 """ helper for html previews """
 def html_from_str(html_str):
-    hti = Html2Image(size=(1000,1000), temp_path="C:/Users/Minerva/Desktop/Storage/Coding/!!SENIOR DESIGN/kw-dev-bot")
-    time_now = time.time()
-    hti.screenshot(html_str=html_str, css_str=cfg.css_str, save_as=cfg.temp_img)
-    last_rendered = os.path.getmtime(cfg.temp_img)
-    if (time_now > last_rendered):
-        return None
+    imgkit.from_string(html_str, cfg.temp_img)
     with open(cfg.temp_img, 'rb') as f:
         image = File(f)
     return image
+
+
+""" helper for question info """
+def question_info_str(info):
+    return "Type: {} - Points: {} - Author: {} - OwnerID: {}\nSection {} - Category: {} - Subcategory: {}\n".format(
+        info['TYPE'],
+        info['POINTS_POSSIBLE'],
+        info['AUTHOR_EXAM_ID'],
+        info['OWNER_ID'],
+        info['SECTION'],
+        info['CATEGORY'],
+        info['SUBCATEGORY'],
+    )
 
 """ takes input html and renders it to an image """
 async def preview_question(cmd):
@@ -61,15 +71,7 @@ async def get_question(cmd):
             info = r.json()
             answers = info["answers"]
 
-            response += "Type: {} - Points: {} - Author: {} - OwnerID: {}\nSection {} - Category: {} - Subcategory: {}\n".format(
-                info['TYPE'],
-                info['POINTS_POSSIBLE'],
-                info['AUTHOR_EXAM_ID'],
-                info['OWNER_ID'],
-                info['SECTION'],
-                info['CATEGORY'],
-                info['SUBCATEGORY'],
-                )
+            response += question_info_str(info)
             try:
                 image = html_from_str(info['QUESTION_TEXT'])
             except:
@@ -79,6 +81,66 @@ async def get_question(cmd):
                 response += "Answer (Correctness {} Priority {}): `{}`\n".format(a['IS_CORRECT_ANSWER'], a['PRIORITY'], a['TEXT'])
 
     await utils.send_message(cmd.message.channel, response, embed=image)
+
+""" delete a question """
+async def delete_question(cmd):
+    response = ''
+    headers = utils.get_headers(admin)
+    image = None
+    global deletion_target
+
+    if cmd.tokens_count < 2:
+        response = "Usage: `{}`".format(cfg.cmd_usages[cfg.cmd_delete_user])
+    
+    else:
+        # if a confirmation is input, try and delete the question
+        if cmd.tokens[1].endswith("confirm") and deletion_target is not None:
+            target = deletion_target
+
+            r = requests.delete("{}admin/problems/{}".format(route, target), headers=headers)
+
+            # utils.logMsg(r.elapsed)
+
+            if r.status_code != 200:
+                response = "Error: Status Code {} ({})".format(r.status_code, r.reason)
+            
+            else:
+                response = "Question deleted."
+        
+        elif cmd.tokens[1].endswith("clear") and deletion_target is not None:
+            response = "Cleared."
+            deletion_target = None
+        
+        # track down the question and give info
+        else:
+            target = cmd.tokens[1]
+
+            r = requests.get("{}admin/problems/{}".format(route, target), headers=headers)
+            if r.status_code > 201:
+                response = "Error: Status Code {} ({})".format(r.status_code, r.reason)
+            else:
+                # we found a question, show info and prompt for confirmation
+                info = r.json()
+                response += question_info_str(info)
+                try:
+                    image = html_from_str(info['QUESTION_TEXT'])
+                except:
+                    response += "Question Text:\n{}".format(info['QUESTION_TEXT'])
+            
+                response += "\n\nPlease use `!deletequestion confirm` to finalize the deletion."
+
+                deletion_target = target
+
+                await utils.send_message(cmd.message.channel, response, embed=image)
+
+                await asyncio.sleep(cfg.expire_time)
+
+                # only reset if its the same target
+                if deletion_target == target:
+                    deletion_target = None
+
+    await utils.send_message(cmd.message.channel, response, embed=image)
+
 
 """ read a user's file upload and add it to the database as a set of questions """
 async def create_question(cmd):

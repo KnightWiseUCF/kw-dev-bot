@@ -24,3 +24,4 @@ async def get_unverified_professors(cmd):
             )
 
     await utils.send_message(cmd.message.channel, response)
+

@@ -97,8 +97,6 @@ async def delete_user(cmd):
                 if deletion_target == target:
                     deletion_target = None
 
-            
-
     return await utils.send_message(cmd.message.channel, response)
 
 
