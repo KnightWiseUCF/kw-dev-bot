@@ -135,6 +135,9 @@ async def create_question(cmd):
 
                 else:
                     response = "There's nothing to confirm."
+            elif cmd.tokens[1].endswith("clear"):
+                question_add_temp_queue.clear()
+                response = "Queue cleared."
             else:
                 response = usage_text
         else:
