@@ -6,6 +6,38 @@ import utils
 route = utils.getRoute()
 admin = utils.getAdminKey()
 
+""" get a user from an input id and return info about it. """
+async def get_user(cmd):
+    response = ''
+    image = None
+    usage_text = "Usage: `{}`".format(cfg.cmd_usages[cfg.cmd_get_user])
+
+    if cmd.tokens_count < 3:
+        response = usage_text
+
+    else:
+        body = {'id': None, 'username': None}
+        if cmd.tokens[1].endswith('id'):
+            body['id'] = cmd.tokens[2]
+        elif cmd.tokens[1].endswith('name'):
+            body['username'] = cmd.tokens[2]
+        headers = utils.get_headers(admin)
+        r = requests.get("{}admin/getuser".format(route), headers=headers, json=body)
+        if r.status_code > 201:
+            response = "Error: Status Code {} ({})".format(r.status_code, r.reason)
+        
+        else:
+            info = r.json()
+            response += "Username: {} - ID: {}\nEmail: {}\nName: {} {}\nPassword (encrypted): `{}`".format(
+                info['ID'],
+                info['USERNAME'],
+                info['EMAIL'],
+                info['FIRSTNAME'],
+                info['LASTNAME'],
+                info['PASSWORD']
+                )
+
+    await utils.send_message(cmd.message.channel, response, embed=image)
 
 """ delete a user account (TODO find id via username) """
 async def delete_user(cmd):

@@ -10,6 +10,7 @@ cmd_create_user = "createuser"
 cmd_preview_question = "previewquestion"
 cmd_create_question = "addquestion"
 cmd_get_question = "getquestion"
+cmd_get_user = "getuser"
 
 # cmd usage map
 cmd_usages = {
@@ -20,6 +21,7 @@ cmd_usages = {
     cmd_preview_question: "{}{} \"[HTML STRING]\"".format(cmd_prefix, cmd_preview_question),
     cmd_create_question: "{}{} [optional: -info-separator str] [optional: -question-separator str] # REQUIRES FILE UPLOAD IN MESSAGE".format(cmd_prefix, cmd_create_question),
     cmd_get_question: "{}{} [Question ID]".format(cmd_prefix, cmd_get_question),
+    cmd_get_user: "{}{} ['id' or 'username'] [ID/USERNAME]".format(cmd_prefix, cmd_get_user),
     }
 
 # cmd description map
@@ -30,7 +32,8 @@ cmd_descriptions = {
     cmd_create_user: "Creates a user with the specified parameters. Email doesn't need to be real, just unique.",
     cmd_preview_question: "Renders a preview of a given input html string.",
     cmd_create_question: "Adds question(s) to the database from a text file upload. Use !createquestion help to view the proper formatting.",
-    cmd_get_question: "Returns info about a question from an input ID",
+    cmd_get_question: "Returns info about a question from an input ID.",
+    cmd_get_user: "Returns info about a user from either the ID or the username.",
     }
 
 update_hookstillactive = 3600 # 3 hours between periodic logs
