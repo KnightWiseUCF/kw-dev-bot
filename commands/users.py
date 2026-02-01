@@ -1,10 +1,24 @@
 import requests
+import asyncio
 
 import cfg
 import utils
 
 route = utils.getRoute()
 admin = utils.getAdminKey()
+
+deletion_target = None
+
+""" helper for displaying user info from a json """
+def user_info_str(info):
+    return "Username: {}, ID: {}\nEmail: {}\nName: {} {}\nPassword (encrypted): `{}`".format(
+        info['ID'],
+        info['USERNAME'],
+        info['EMAIL'],
+        info['FIRSTNAME'],
+        info['LASTNAME'],
+        info['PASSWORD']
+    )
 
 """ get a user from an input id and return info about it. """
 async def get_user(cmd):
@@ -28,40 +42,62 @@ async def get_user(cmd):
         
         else:
             info = r.json()
-            response += "Username: {} - ID: {}\nEmail: {}\nName: {} {}\nPassword (encrypted): `{}`".format(
-                info['ID'],
-                info['USERNAME'],
-                info['EMAIL'],
-                info['FIRSTNAME'],
-                info['LASTNAME'],
-                info['PASSWORD']
-                )
+            response += user_info_str(info)
 
     await utils.send_message(cmd.message.channel, response, embed=image)
 
-""" delete a user account (TODO find id via username) """
+""" delete a user account """
 async def delete_user(cmd):
     response = ''
+    headers = utils.get_headers(admin)
+    global deletion_target
 
     if cmd.tokens_count < 2:
         response = "Usage: `{}`".format(cfg.cmd_usages[cfg.cmd_delete_user])
     
     else:
-        target = cmd.tokens[1]
+        # if a confirmation is input, try and delete the user
+        if cmd.tokens[1].endswith("confirm") and deletion_target is not None:
+            target = deletion_target
 
-        headers = {
-            'Authorization': 'Bearer {}'.format(admin)
-        }
+            r = requests.delete("{}admin/users/{}".format(route, target), headers=headers)
 
-        r = requests.delete("{}admin/users/{}".format(route, target), headers=headers)
+            # utils.logMsg(r.elapsed)
 
-        # utils.logMsg(r.elapsed)
-
-        if r.status_code != 200:
-            response = "Error: Status Code {} ({})".format(r.status_code, r.reason)
+            if r.status_code != 200:
+                response = "Error: Status Code {} ({})".format(r.status_code, r.reason)
+            
+            else:
+                response = "User deleted."
         
+        elif cmd.tokens[1].endswith("clear") and deletion_target is not None:
+            response = "Cleared."
+            deletion_target = None
+        
+        # track down the user and give info
         else:
-            response = "User deleted."
+            target = cmd.tokens[1]
+
+            r = requests.get("{}admin/getuser".format(route), headers=headers, json={'id': target})
+            if r.status_code > 201:
+                response = "Error: Status Code {} ({})".format(r.status_code, r.reason)
+            else:
+                # we found a user, show info and prompt for confirmation
+                response += user_info_str(r.json())
+            
+                response += "\n\nPlease use `!deleteuser confirm` to finalize the deletion."
+
+                deletion_target = target
+
+                await utils.send_message(cmd.message.channel, response)
+
+                await asyncio.sleep(cfg.expire_time)
+
+                # only reset if its the same target
+                if deletion_target == target:
+                    deletion_target = None
+
+            
 
     return await utils.send_message(cmd.message.channel, response)
 
