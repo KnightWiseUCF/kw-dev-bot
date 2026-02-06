@@ -28,6 +28,7 @@ cmd_map = {
     cfg.cmd_get_user: commands.users.get_user,
     cfg.cmd_unverified_list: commands.professors.get_unverified_professors,
     cfg.cmd_delete_question: commands.questions.delete_question,
+    cfg.cmd_verify_prof: commands.professors.verify_professor,
 }
 
 utils.logMsg('Starting up...')
