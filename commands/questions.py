@@ -19,7 +19,7 @@ deletion_target = None
 
 """ helper for html previews """
 def html_from_str(html_str):
-    imgkit.from_string(html_str, cfg.temp_img)
+    imgkit.from_string(html_str, cfg.temp_img, css=cfg.css_file)
     with open(cfg.temp_img, 'rb') as f:
         image = File(f)
     return image

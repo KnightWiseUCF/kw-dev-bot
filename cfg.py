@@ -68,6 +68,7 @@ topics = [
     ]
 
 css_str = "body {background-color: white; white-space: pre-wrap;;}"
+css_file = "question.css"
 
 temp_img = "temp.png"
 
