@@ -12,8 +12,8 @@ deletion_target = None
 """ helper for displaying user info from a json """
 def user_info_str(info):
     return "Username: {}, ID: {}\nEmail: {}\nName: {} {}\nPassword (encrypted): `{}`".format(
-        info['ID'],
         info['USERNAME'],
+        info['ID'],
         info['EMAIL'],
         info['FIRSTNAME'],
         info['LASTNAME'],
@@ -30,13 +30,13 @@ async def get_user(cmd):
         response = usage_text
 
     else:
-        body = {'id': None, 'username': None}
+        body = {}
         if cmd.tokens[1].endswith('id'):
             body['id'] = cmd.tokens[2]
         elif cmd.tokens[1].endswith('name'):
             body['username'] = cmd.tokens[2]
         headers = utils.get_headers(admin)
-        r = requests.get("{}admin/getuser".format(route), headers=headers, json=body)
+        r = requests.get("{}admin/getuser".format(route), headers=headers, params=body)
         if r.status_code > 201:
             response = "Error: Status Code {} ({})".format(r.status_code, r.reason)
         

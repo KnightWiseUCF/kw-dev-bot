@@ -11,9 +11,9 @@ async def get_unverified_professors(cmd):
     headers = utils.get_headers(admin)
     r = requests.get("{}admin/unverifiedprofs".format(route), headers=headers)
 
-    info = r.json()
+    info = r.json()['profs']
 
-    for p in info.keys():
+    for p in range(len(info)):
         current_prof = info[p]
         response += "- ID: {}, Username: {}, Email: {}, Name: {} {}\n".format(
             current_prof['ID'],
