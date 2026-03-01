@@ -3,8 +3,10 @@ import time
 import requests
 import asyncio
 import imgkit
+import csv
 
-from html2image import Html2Image
+from io import StringIO
+#from html2image import Html2Image
 from discord import File
 from ast import literal_eval
 
@@ -78,7 +80,7 @@ async def get_question(cmd):
                 response += "Question Text:\n{}".format(info['QUESTION_TEXT'])
 
             for a in answers:
-                response += "Answer (Correctness {} Priority {}): `{}`\n".format(a['IS_CORRECT_ANSWER'], a['PRIORITY'], a['TEXT'])
+                response += "Answer (Correctness {} Placement {} Rank {}): `{}`\n".format(a['IS_CORRECT_ANSWER'], a['PLACEMENT'], a['RANK'], a['TEXT'])
 
     await utils.send_message(cmd.message.channel, response, embed=image)
 
@@ -138,6 +140,7 @@ async def delete_question(cmd):
                 # only reset if its the same target
                 if deletion_target == target:
                     deletion_target = None
+                return
 
     await utils.send_message(cmd.message.channel, response, embed=image)
 
@@ -146,6 +149,7 @@ async def delete_question(cmd):
 async def create_question(cmd):
     response = ''
     image = None
+    csv_mode = False
 
     usage_text = "Usage: `{}`\nText file format:\n```{}```".format(cfg.cmd_usages[cfg.cmd_create_question], cfg.question_input_template)
 
@@ -170,6 +174,9 @@ async def create_question(cmd):
         elif tokens[t].endswith("question-separator") and t < t_count:
             q_separator = "\r\n{}\r\n".format(tokens[t+1])
         
+        elif tokens[t].endswith("csv"):
+            csv_mode = True
+
         # triggers usage text
         elif tokens[t].endswith("help"):
             cmd.attachments_count = 0
@@ -194,12 +201,16 @@ async def create_question(cmd):
                         ids.append(r.json()["questionId"])
                     
                     response = "Added {} questions to the database.\nIDs: {}".format(q_count, ids)
+                    question_add_temp_queue.clear()
 
                 else:
                     response = "There's nothing to confirm."
             elif cmd.tokens[1].endswith("clear"):
-                question_add_temp_queue.clear()
-                response = "Queue cleared."
+                if len(question_add_temp_queue) == 0:
+                    response = "nothing to clear."
+                else:
+                    question_add_temp_queue.clear()
+                    response = "Queue cleared."
             else:
                 response = usage_text
         else:
@@ -209,10 +220,21 @@ async def create_question(cmd):
     else:
         file = await cmd.attachments[0].read()
 
-        questions = file.decode("utf-8").split(q_separator)
+        if csv_mode:
+            questions = csv.reader(StringIO(file.decode("utf-8")))
+            #print(questions[0])
+
+        else:
+            questions = file.decode("utf-8").split(q_separator)
         q_count = 0
+
         for q in questions:
-            raw_info = q.split(i_separator)
+            print(q)
+            if csv_mode:
+                raw_info = q
+            
+            else:
+                raw_info = q.split(i_separator)
 
             try:
                 current_question = {}
@@ -228,7 +250,11 @@ async def create_question(cmd):
                 # interpret lists
                 current_question["answer_text"] = literal_eval(raw_info[8])
                 current_question["answer_correctness"] = literal_eval(raw_info[9])
-                current_question["answer_priority"] = literal_eval(raw_info[10])
+                current_question["answer_placement"] = literal_eval(raw_info[10])
+                current_question["answer_rank"] = literal_eval(raw_info[11])
+                ansNum = len(current_question["answer_text"])
+                if not (ansNum == len(current_question["answer_correctness"]) and ansNum == len(current_question["answer_placement"]) and ansNum == len(current_question["answer_rank"])):
+                    raise ValueError("Answer text arrays not equal length.")
 
                 question_add_temp_queue.append(current_question)
             # if theres a valueerror, the input is probably improper

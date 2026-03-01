@@ -18,15 +18,15 @@ cmd_verify_prof = "verifyprof"
 # cmd usage map
 cmd_usages = {
     cmd_help: "{}{}".format(cmd_prefix, cmd_help),
-    cmd_count_questions: "{}{} [TOPIC NAME]".format(cmd_prefix, cmd_count_questions),
     cmd_delete_user: "{}{} [USER ID]".format(cmd_prefix, cmd_delete_user),
     cmd_create_user: "{}{} [USERNAME] [EMAIL] [optional:PASSWORD] [optional:FIRSTNAME] [optional:LASTNAME]".format(cmd_prefix, cmd_create_user),
+    cmd_get_user: "{}{} ['id' or 'username'] [ID/USERNAME]".format(cmd_prefix, cmd_get_user),
     cmd_preview_question: "{}{} \"[HTML STRING]\"".format(cmd_prefix, cmd_preview_question),
+    cmd_count_questions: "{}{} [TOPIC NAME]".format(cmd_prefix, cmd_count_questions),
     cmd_create_question: "{}{} [optional: -info-separator str] [optional: -question-separator str] # REQUIRES FILE UPLOAD IN MESSAGE".format(cmd_prefix, cmd_create_question),
     cmd_get_question: "{}{} [Question ID]".format(cmd_prefix, cmd_get_question),
-    cmd_get_user: "{}{} ['id' or 'username'] [ID/USERNAME]".format(cmd_prefix, cmd_get_user),
-    cmd_unverified_list: "{}{}".format(cmd_prefix, cmd_unverified_list),
     cmd_delete_question: "{}{} [QUESTION ID]".format(cmd_prefix, cmd_delete_question),
+    cmd_unverified_list: "{}{}".format(cmd_prefix, cmd_unverified_list),
     cmd_verify_prof: "{}{} [PROF ID]".format(cmd_prefix, cmd_verify_prof),
     }
 
@@ -72,6 +72,6 @@ css_file = "question.css"
 
 temp_img = "temp.png"
 
-question_input_template = "Type of question\n$\nAuthor\n$\nSection\n$\nCategory\n$\nSubcategory\n$\nfloat for Points\n$\nQuestionText\n$\nint for OwnerID\n$\n['list', 'of', 'answer', 'texts']\n$\nList of smallints for answer correctness\n$\nList of ints for answer priority"
+question_input_template = "Type of question\n$\nAuthor\n$\nSection\n$\nCategory\n$\nSubcategory\n$\nfloat for Points\n$\nQuestionText\n$\nint for OwnerID\n$\n['list', 'of', 'answer', 'texts']\n$\nList of smallints for answer correctness\n$\nList of ints for answer rank\n$\nList of varchars for answer placement"
 
 expire_time = 60 * 5
